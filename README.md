@@ -1,8 +1,9 @@
-# React + Vite
+## OMDB API Endpoint:
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+```js
+const endpoint = 'http://www.omdbapi.com/';
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+// s is used for searching movie title. First 10 items are returned.
+// next 10 ota file chio bahne => page 11 - 20 sama ko data dine bhayo
+const query = '?apiKey="hamro_key"&s="love"&page="2"';
+```

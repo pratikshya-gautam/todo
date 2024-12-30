@@ -1,35 +1,96 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import { defaultReminder } from './data/data';
+import { Reminder } from './pages/reminder';
+import { v4 as uuid } from 'uuid';
+import { Clock } from './pages/clock';
+import { Routes, Route, useNavigate } from 'react-router';
+import { Navbar } from './layout/navbar';
+import { Home } from './pages/home';
+import { SearchMovie } from './pages/search-movie';
 
-function App() {
-  const [count, setCount] = useState(0)
+export function App() {
+  const [reminders, setReminders] = useState(defaultReminder);
+  const navigate = useNavigate();
+
+  function addReminder(note) {
+    const newReminder = {
+      id: uuid(),
+      isDone: false,
+      note: note,
+    };
+    const newList = [...reminders, newReminder];
+    setReminders(newList);
+  }
+
+  function markReminderAsDone(id, isDone) {
+    const newReminder = reminders.map((r) => {
+      if (r.id === id) {
+        r.isDone = isDone;
+        return r;
+      }
+      return r;
+    });
+    setReminders(newReminder);
+  }
+
+  function removeReminder(id) {
+    const newReminder = reminders.filter((r) => {
+      if (r.id === id) {
+        return false;
+      }
+      return true;
+    });
+
+    setReminders(newReminder);
+  }
+
+  function updateReminder(id, note) {
+    const newReminder = reminders.map((r) => {
+      if (r.id === id) {
+        r.note = note;
+        return r;
+      }
+      return r;
+    });
+
+    setReminders(newReminder);
+  }
 
   return (
     <>
+      <Navbar />
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <button onClick={() => navigate(-1)} className="btn btn-link">
+          Back
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
 
-export default App
+      <div className="container mt-5">
+        <Routes>
+          <Route index path="/" element={<Home />} />
+          <Route
+            path="/reminder"
+            element={
+              <Reminder
+                reminders={reminders}
+                addNote={addReminder}
+                markAsDone={markReminderAsDone}
+                removeReminder={removeReminder}
+                updateReminder={updateReminder}
+              />
+            }
+          />
+          <Route
+            path="/clock"
+            element={
+              <div className="card mt-5">
+                <Clock />
+              </div>
+            }
+          />
+          <Route path="/movie-search" element={<SearchMovie />} />
+        </Routes>
+      </div>
+    </>
+  );
+}
